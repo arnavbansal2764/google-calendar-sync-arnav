@@ -31,31 +31,12 @@ router.post('/create-event', async (req, res) => {
         res.status(500).json({ message: 'Failed to create event', error });
     }
 });
-async function refreshAccessToken(user) {
-    try {
-        const response = await axios.post(
-            'https://oauth2.googleapis.com/token',
-            {
-                client_id: process.env.CLIENT_ID,
-                client_secret: process.env.CLIENT_SECRET,
-                refresh_token: user.refreshToken,
-                grant_type: 'refresh_token',
-            }
-        );
-        // Update user's access token in the database
-        user.accessToken = response.data.access_token;
-        await user.save();
-        return response.data.access_token;
-    } catch (error) {
-        console.error('Failed to refresh access token:', error);
-        throw new Error('Unable to refresh access token');
-    }
-}
+
 router.get('/events', async (req,res) => {
     if (!req.user) return res.status(401).json({ message: 'Unauthorized' });
 
     const user = await User.findById(req.user._id);
-    if (!user) return res.status(401).json({ message: 'Unauthorized Bhencho' });
+    if (!user) return res.status(401).json({ message: 'Unauthorized' });
 
     try {
         const response = await axios.get(

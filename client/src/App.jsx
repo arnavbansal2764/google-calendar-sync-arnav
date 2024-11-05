@@ -15,14 +15,17 @@ const App = () => {
   }, []);
   return (
     <>
-     
-        <Router>
+      {isLoading ?
+        (<Loader isLoading={isLoading} />) :
+        (<Router>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/calendar" element={<CalendarPage />} />
           </Routes>
-        </Router>
-      
+        </Router>)
+        }
+
+
     </>
 
 

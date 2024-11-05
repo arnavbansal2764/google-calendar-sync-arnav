@@ -11,16 +11,14 @@ const calendarRoutes = require('./routes/calendar');
 dotenv.config();
 
 const app = express();
-
-const mongoStatus = mongoose.connect(`${process.env.MONGODB_URI}`, {
+mongoose.connect(`${process.env.MONGODB_URI}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
-if(mongoStatus){
-    console.log('MongoDB Connected');
-}
 
-app.use(cors({ origin: 'https://held-tariff-rather-physicians.trycloudflare.com/', credentials: true }));
+
+// app.use(cors({ origin: 'https://held-tariff-rather-physicians.trycloudflare.com', credentials: true }));
+// app.use(cors({ origin: `${process.env.FRONTEND_TUNNEL_URL}`, credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
 app.use(
@@ -43,7 +41,8 @@ app.get(
     '/auth/google/callback',
     passport.authenticate('google', { failureRedirect: '/' }),
     (req, res) => {
-        res.redirect('https://held-tariff-rather-physicians.trycloudflare.com/calendar');
+        // res.redirect('https://held-tariff-rather-physicians.trycloudflare.com/calendar');
+        res.redirect(`${process.env.FRONTEND_TUNNEL_URL}/calendar`); 
     }
 );
 
